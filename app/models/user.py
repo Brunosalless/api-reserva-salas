@@ -11,4 +11,4 @@ class User(Base):
     nome: Mapped[str] = mapped_column(String(255))
     email: Mapped[str] = mapped_column(String(255), unique=True)
     senha_hash: Mapped[str] = mapped_column(String(255))
-    papel: Mapped[str] = mapped_column(Enum("admin", "user", name="user_roles"), default="user")
+    papel: Mapped[str] = mapped_column(Enum("admin", "user", create_constraint=True, validate_strings=True, name="user_roles"), default="user")
