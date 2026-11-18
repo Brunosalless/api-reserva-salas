@@ -20,3 +20,10 @@ class RoomRead(RoomCreate):
     model_config = ConfigDict(from_attributes=True)
 
     id: int
+
+
+class RoomPage(BaseModel):
+    items: list[RoomRead]
+    total: int
+    page: int
+    size: int
