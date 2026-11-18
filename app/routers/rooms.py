@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, status, Query
+from fastapi import APIRouter, Depends, status, Query, HTTPException
 from sqlalchemy.orm import Session
 from sqlalchemy import select, func
 
@@ -33,3 +33,16 @@ def listar_salas(
     total_salas = db.execute(select(func.count(Room.id))).scalar_one()
     salas = db.execute(select(Room).order_by(Room.id).offset((page - 1) * size).limit(size)).scalars().all()
     return RoomPage(items=salas, total=total_salas, page=page, size=size)
+
+
+@router.put("/{room_id}", response_model=RoomRead, dependencies=[Depends(verificar_admin)])
+def atualizar_sala(room_id: int, dados: RoomCreate, db: Session = Depends(get_db)):
+    sala = db.get(Room, room_id)
+    if sala is None:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Sala não encontrada")
+    sala.nome = dados.nome
+    sala.capacidade = dados.capacidade
+    sala.localizacao = dados.localizacao
+    db.commit()
+    db.refresh(sala)
+    return sala
