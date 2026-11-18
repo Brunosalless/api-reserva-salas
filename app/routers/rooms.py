@@ -46,3 +46,12 @@ def atualizar_sala(room_id: int, dados: RoomCreate, db: Session = Depends(get_db
     db.commit()
     db.refresh(sala)
     return sala
+
+
+@router.delete("/{room_id}", status_code=status.HTTP_204_NO_CONTENT, dependencies=[Depends(verificar_admin)])
+def deletar_sala(room_id: int, db: Session = Depends(get_db)):
+    sala = db.get(Room, room_id)
+    if sala is None:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Sala não encontrada")
+    db.delete(sala)
+    db.commit()
