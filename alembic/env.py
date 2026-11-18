@@ -4,9 +4,7 @@ from logging.config import fileConfig
 from alembic import context
 
 from app.database import Base, DATABASE_URL, engine
-
-# Importar aqui os modelos SQLAlchemy quando estiverem disponíveis.
-# Exemplo: from app.models import User, Room, Reservation
+from app.models import User, Room, Reservation
 
 config = context.config
 
